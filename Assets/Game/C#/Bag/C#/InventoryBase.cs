@@ -14,14 +14,14 @@ public class InventoryBase :ScriptableObject
 public class ItemPlate
 {
     public string itemName;
-    public ItemBase item;
+    [FormerlySerializedAs("item")] public ItemBase drink;
     public int count;
 
-    public ItemPlate(ItemBase item)
+    public ItemPlate(ItemBase drink)
     {
-        this.item=item;
+        this.drink=drink;
         count=1;
-        itemName=item.name;
+        itemName=drink.name;
     }
     
 }

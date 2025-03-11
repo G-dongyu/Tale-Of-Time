@@ -24,14 +24,21 @@ public class StateController : MonoBehaviour
     public State currentState;
     private NpcController _npcController;
     private DeskData _deskData;
-    private Animator _animator;
+    public Animator _animator;
     private NavMeshAgent _navMeshAgent;
     private Vector3 exitSitPos;
     private Vector3 _startPos;
+    private float _time;
+    private NpcActive _npcActive;
+    private GameObject player;
+
+    [Header("时间")] public float waitAskTime;
+    public float waitDoTime;
+    public float drinkTime;
 
     public void SwitchState(State state)
     {
-        _animator = GetComponentInChildren<Animator>();
+        _animator = transform.GetChild(1).GetComponentInChildren<Animator>();
         if (currentState == state) return;
         StateExit();
         currentState = state;
@@ -43,7 +50,10 @@ public class StateController : MonoBehaviour
         _npcController = GetComponent<NpcController>();
         SwitchState(State.Idle);
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _npcActive = GetComponent<NpcActive>();
+        player = FindObjectOnWorld.instance.GetObject(FindObjectType.Player);
     }
+
     private void Update()
     {
         StateUpdate();
@@ -72,23 +82,39 @@ public class StateController : MonoBehaviour
                 });
                 break;
             case State.WaitAsk:
-                AddAction.instance.DelayPlay(() => { SwitchState(State.ExitSit);},4f);
+                _time = waitAskTime;
+                _npcActive.inspect.AddListener(() => { SwitchState(State.WaitDo); });
                 break;
             case State.WaitDo:
-
+                _npcActive.inspect.AddListener(() =>
+                {
+                    player.GetComponent<MakingManager>().GiveCup(_npcController);
+                });
+                _npcController.eventsOnFalseDrink.AddListener(() =>
+                {
+                    SwitchState(State.ExitSit);
+                });
+                _npcController.eventsOnTrueDrink.AddListener(() =>
+                {
+                    SwitchState(State.Drink);
+                });
+                _time = waitDoTime;
+                _npcController.ShowTip();
                 break;
             case State.Drink:
-
+                _animator.SetTrigger("Drink");
+                _time = drinkTime;
+                
                 break;
             case State.ExitSit:
                 _animator.SetBool("Sit", false);
-                transform.DOMove(exitSitPos, 1f).OnComplete(() =>
-                {
-                    SwitchState(State.MoveToHome);
-                });
+                transform.DOMove(exitSitPos, 1f).OnComplete(() => { SwitchState(State.MoveToHome); });
+                player.GetComponent<MoneyManager>().AddMoney(_npcController.GetNeedDrink().money);
                 break;
             case State.MoveToHome:
+                _npcController.CloseTip();
                 _navMeshAgent.enabled = true;
+                _npcController.ExitCheck();
                 _animator.SetBool("Walk", true);
                 break;
         }
@@ -112,22 +138,38 @@ public class StateController : MonoBehaviour
             case State.Sit:
                 break;
             case State.WaitAsk:
-
+                _time -= Time.deltaTime;
+                if (_time <= 0)
+                {
+                    SwitchState(State.ExitSit);
+                }
                 break;
             case State.WaitDo:
+                _time -= Time.deltaTime;
+                if (_time <= 0)
+                {
+                    SwitchState(State.ExitSit);
+                }
 
                 break;
             case State.Drink:
+                _time -= Time.deltaTime;
+                if (_time <= 0)
+                {
+                    SwitchState(State.ExitSit);
+                }
 
                 break;
             case State.ExitSit:
-                
+
                 break;
             case State.MoveToHome:
                 pos = _startPos;
                 if (_npcController.SetTarget(pos, 0.3f))
                 {
+                    GameManager.instance.GetComponent<NpcManager>().RemoveNpc(_npcController);
                     Destroy(gameObject);
+                    
                 }
 
                 break;
@@ -149,10 +191,13 @@ public class StateController : MonoBehaviour
 
                 break;
             case State.WaitAsk:
-
+                _npcActive.inspect.RemoveAllListeners();
                 break;
             case State.WaitDo:
-
+                _npcActive.inspect.RemoveAllListeners();
+                _npcController.eventsOnFalseDrink.RemoveAllListeners();
+                _npcController.eventsOnTrueDrink.RemoveAllListeners();
+                
                 break;
             case State.Drink:
 

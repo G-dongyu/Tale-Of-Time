@@ -20,3 +20,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c600d1c5796cc0f4cb997cbe390446c3, type: 2}
   - {fileID: 11400000, guid: 431c8e4aebf6e7b4c8e3a92dcc3fbd56, type: 2}
   icon: {fileID: 21300000, guid: 80086fbdb1b435b4ebb4dd546d290bae, type: 3}
+  drinkPrefab: {fileID: 5547989934195494942, guid: f7859da6c979db74a9dcd96998515aa1,
+    type: 3}
+  money: 200

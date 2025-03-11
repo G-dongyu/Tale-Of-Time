@@ -23,19 +23,19 @@ public class ItemConfigGenerator : EditorWindow
         foreach (ItemBase.ItemName itemName in itemNames)
         {
             // 创建新的ItemBase实例
-            ItemBase newItem = ScriptableObject.CreateInstance<ItemBase>();
+            ItemBase newDrink = ScriptableObject.CreateInstance<ItemBase>();
 
             // 设置基础属性
-            newItem.itemName = itemName; // 关键：设置对应的枚举值
-            newItem.money = 0; // 默认值
-            newItem.icon = null; // 默认值
+            newDrink.itemName = itemName; // 关键：设置对应的枚举值
+            newDrink.money = 0; // 默认值
+            newDrink.icon = null; // 默认值
 
             // 生成合法文件名
             string fileName = itemName.ToString().Trim();
             string assetPath = Path.Combine(folderPath, $"{fileName}.asset");
 
             // 创建并保存资源
-            AssetDatabase.CreateAsset(newItem, assetPath);
+            AssetDatabase.CreateAsset(newDrink, assetPath);
         }
 
         AssetDatabase.SaveAssets();

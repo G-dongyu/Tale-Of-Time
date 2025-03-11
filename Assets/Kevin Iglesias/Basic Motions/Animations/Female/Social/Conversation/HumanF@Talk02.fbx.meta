@@ -36,15 +36,15 @@ ModelImporter:
       name: HumanF@Talk02
       takeName: Untitled
       internalID: 3094330708855449807
-      firstFrame: 0
-      lastFrame: 71
+      firstFrame: 31
+      lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
@@ -825,7 +825,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 56ca56168a6cb9b45924e7b4cb4c9cb4, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 56ca56168a6cb9b45924e7b4cb4c9cb4,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1

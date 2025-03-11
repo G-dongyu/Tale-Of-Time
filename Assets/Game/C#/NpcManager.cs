@@ -13,12 +13,15 @@ public class NpcManager : MonoBehaviour
     private Level _currentLevel;
     private List<NpcController> _allNpc = new List<NpcController>();
     private DeskManager _deskManager;
+    private LevelManager _levelManager;
+    private TimeManager _timeManager;
 
     private void Start()
     {
-        _currentLevel = GameManager.instance.GetLevel();
         _deskManager = GameManager.instance.GetComponent<DeskManager>();
+        _levelManager = GameManager.instance.GetComponent<LevelManager>();
         _time = interSpawnTime;
+        _timeManager= GameManager.instance.GetComponent<TimeManager>();
     }
 
     private void SpawnNpc()
@@ -35,11 +38,33 @@ public class NpcManager : MonoBehaviour
     private void SpawnTimePlan()
     {
         _time -= Time.deltaTime;
-        if (_time <= 0 && _allNpc.Count < _currentLevel.npcMax)
+
+        if (_time <= 0&&_timeManager.GetDayState()==TimeManager.DayState.Better1)
         {
-            SpawnNpc();
-            _time = interSpawnTime;
+            _currentLevel = _levelManager.GetLevel();
+            if (_allNpc.Count < _currentLevel.npcMax)
+            {
+                SpawnNpc();
+                _time = interSpawnTime;
+            }
         }
+    }
+
+    public void DestroyAllNpc()
+    {
+        foreach (var npc in _allNpc)
+        {
+            npc.ExitCheck();
+            Destroy(npc.gameObject);
+        }
+        _allNpc.Clear();
+        
+    }
+
+
+    public void RemoveNpc(NpcController npc)
+    {
+        _allNpc.Remove(npc);
     }
 
     private void Update()

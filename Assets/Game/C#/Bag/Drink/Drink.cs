@@ -22,5 +22,7 @@ public class Drink : ScriptableObject
     public DrinkName drinkName;
     public List<ItemBase> compose;
     public Sprite icon;
+    public GameObject drinkPrefab;
+    public int money;
 }
 

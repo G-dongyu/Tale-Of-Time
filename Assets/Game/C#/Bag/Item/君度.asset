@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: "\u541B\u5EA6"
   m_EditorClassIdentifier: 
   itemName: 14
-  money: 0
+  money: 50
   icon: {fileID: 21300000, guid: 64aceffdb54e73b40ab15a64d517706a, type: 3}

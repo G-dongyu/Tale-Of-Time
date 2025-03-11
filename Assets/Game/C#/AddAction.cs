@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AddAction : MonoBehaviour
 {
@@ -33,5 +34,23 @@ public class AddAction : MonoBehaviour
     public void ClosePageBySize(GameObject page)
     {
         page.transform.DOScale(0, 1).OnComplete(()=>{page.SetActive(false);});
+    }
+
+    public void BecomeBlack(Image image, Action action = null)
+    {
+        image.gameObject.SetActive(true);
+        image.color = new Color(1, 1, 1, 0);
+        image.DOColor(Color.black, 1).OnComplete(() =>
+        {
+            AddAction.instance.DelayPlay(() =>
+            {
+                action?.Invoke();
+                image.DOColor(new Color(1, 1, 1, 0), 1).OnComplete(() =>
+                {
+                    image.gameObject.SetActive(false);
+                });
+            }, 1f);
+        });
+
     }
 }

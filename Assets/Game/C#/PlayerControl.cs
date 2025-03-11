@@ -12,6 +12,7 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody rb;
     private Animator _animator;
     private bool isRun;
+    private bool isSleep;
 
     void Start()
     {
@@ -71,4 +72,31 @@ public class PlayerControl : MonoBehaviour
         Quaternion targetRot = Quaternion.LookRotation(movement);
         rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, rotationSpeed * Time.fixedDeltaTime));
     }
+
+    public void PlayerAni(string name,bool isActive)
+    {
+        _animator.SetBool(name, isActive);
+    }
+
+    public void Sleep(Transform point)
+    {
+        isSleep = true;
+        PlayerAni("Sleep", true);
+        Vector3 rot = new Vector3(-90, 180, 0);
+        transform.eulerAngles = rot;
+        transform.position= point.position;
+    }
+
+    public void UpSleep(Transform point)
+    {
+        isSleep = false;
+        PlayerAni("Sleep", false);
+        Vector3 rot = new Vector3(0, 0, 0);
+        transform.eulerAngles = rot;
+        transform.position = point.position;
+
+
+
+    }
+   
 }
